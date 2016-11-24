@@ -24,7 +24,7 @@ def frameworkDir = file(moquiDir.absolutePath + '/framework')
 apply plugin: 'com.github.ben-manes.versions'
 buildscript {
   repositories { jcenter() }
-  dependencies { classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0' }
+  dependencies { classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0' }
 }
 dependencyUpdates.resolutionStrategy = { componentSelection { rules -> rules.all { ComponentSelection selection ->
     boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier -> selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/ }
@@ -54,9 +54,9 @@ jar {
     destinationDir = file(projectDir.absolutePath + '/lib')
     baseName = jarBaseName
 }
-task copyDependencies << {
+task copyDependencies { doLast {
     copy { from (configurations.runtime - project(':framework').configurations.runtime - project(':framework').jar.archivePath)
         into file(projectDir.absolutePath + '/lib') }
-}
+} }
 copyDependencies.dependsOn cleanLib
 jar.dependsOn copyDependencies
